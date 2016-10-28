@@ -36,13 +36,22 @@ module Sidekiq
         
         thr.exit
 
-        save_worker_stats worker_stats
+        worker_key = "#{worker_stats[:class]}:#{worker_stats[:start]}:#{worker_stats[:jid]}"
+        save_worker_stats worker_key, worker_stats
       end
 
       private
 
-      def save_worker_stats(worker_stats)
-        puts worker_stats
+      def save_worker_stats(key, worker_stats)
+        Sidekiq.redis do |redis|
+          worker_stats.each do |k,v|
+            if v.is_a?(Hash)
+              save_worker_stats(key + ":#{k}", v)
+            else
+              redis.hset REDIS_HASH, "#{key}:#{k}", v
+            end
+          end
+        end
       end
     end
   end
