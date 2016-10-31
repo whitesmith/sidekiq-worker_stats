@@ -1,0 +1,31 @@
+<div class="worker_stats">
+  <h2>Worker Stats</h2>
+
+  <div class="worker_stats__container">
+    <div class="worker_stats__table">
+      <table class="table table-hover table-bordered table-striped table-white live-reload">
+        <thead>
+          <th>Worker</th>
+          <th>Started at</th>
+          <th>Finished at</th>
+          <th>Runtime</th>
+          <th>Avg. Memory</th>
+          <th>Peak Memory</th>
+        </thead>
+
+        <tbody>
+          <% @workers.each do |key, worker| %>
+            <tr>
+              <td><a href="<%= root_path %>worker_stats/<%= key.to_s %>"><%= worker["class"].to_s %></a></td>
+              <td><%= Time.at(worker["start"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
+              <td><%= Time.at(worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
+              <td><%= "#{worker["runtime"]} s" %></td>
+              <td><%= "#{(worker["mem"].values.inject(:+) / worker["mem"].count) / 1024 / 1024} Mb" %></td>
+              <td><%= "#{(worker["mem"].values.max / 1024 / 1024)} Mb" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

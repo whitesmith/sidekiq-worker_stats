@@ -1,0 +1,69 @@
+<div class="worker_stats">
+  <h2>Worker Stats for <%= @key.to_s %> </h2>
+
+  <div class="worker_stats__container">
+    <div class="worker_stats__info">
+      <h4>Info</h4>
+      <div class="worker_stats__info_table">
+        <table class="table table-hover table-bordered table-striped table-white">
+          <thead>
+            <th>Field</th>
+            <th>Value</th>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Class</td>
+              <td><%= @worker["class"] %></td>
+            </tr>
+            <tr>
+              <td>Queue</td>
+              <td><%= @worker["queue"] %></td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td><%= @worker["status"] %></td>
+            </tr>
+            <tr>
+              <td>Job ID</td>
+              <td><%= @worker["jid"] %></td>
+            </tr>
+            <tr>
+              <td>Start</td>
+              <td><%= Time.at(@worker["start"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
+            </tr>
+            <tr>
+              <td>Stop</td>
+              <td><%= Time.at(@worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
+            </tr>
+            <tr>
+              <td>Runtime</td>
+              <td><%= @worker["runtime"] %> seconds</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="worker_stats__memory">
+      <h4>Memory</h4>
+      <div class="worker_stats__memory_table">
+        <table class="table table-hover table-bordered table-striped table-white">
+          <thead>
+            <th>Time (after start)</th>
+            <th>Memory</th>
+          </thead>
+
+          <tbody>
+            <% @worker["mem"].each do |time, mem| %>
+              <tr>
+                <td><%= (time.to_i - @worker["start"]).to_s %> seconds</td>
+                <td><%= "#{mem / 1024 / 1024} Mb" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

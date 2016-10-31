@@ -1,3 +1,5 @@
+require 'json'
+
 module Sidekiq
   module WorkerStats
     class Middleware
@@ -29,12 +31,12 @@ module Sidekiq
         raise e
       ensure
         worker_stats[:stop] = Time.now.to_i
-        worker_stats[:runtime] = worker_stats[:start] - worker_stats[:stop]
+        worker_stats[:runtime] = worker_stats[:stop] - worker_stats[:start]
 
         worker_stats[:queue] = queue
         worker_stats[:class] = worker.class.to_s
-        
-        thr.exit
+       
+        thr.exit if thr != nil
 
         worker_key = "#{worker_stats[:class]}:#{worker_stats[:start]}:#{worker_stats[:jid]}"
         save_worker_stats worker_key, worker_stats
@@ -44,13 +46,7 @@ module Sidekiq
 
       def save_worker_stats(key, worker_stats)
         Sidekiq.redis do |redis|
-          worker_stats.each do |k,v|
-            if v.is_a?(Hash)
-              save_worker_stats(key + ":#{k}", v)
-            else
-              redis.hset REDIS_HASH, "#{key}:#{k}", v
-            end
-          end
+          redis.hset REDIS_HASH, key, JSON.generate(worker_stats)
         end
       end
     end

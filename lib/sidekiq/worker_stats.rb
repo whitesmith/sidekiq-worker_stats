@@ -2,6 +2,7 @@ require 'sidekiq'
 
 require 'sidekiq/worker_stats/configuration'
 require 'sidekiq/worker_stats/middleware'
+require 'sidekiq/worker_stats/web' if defined?(Sidekiq::Web)
 
 module Sidekiq
   module WorkerStats
@@ -26,3 +27,4 @@ Sidekiq.configure_server do |config|
     chain.add Sidekiq::WorkerStats::Middleware
   end
 end
+
