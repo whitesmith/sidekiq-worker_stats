@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   
   s.add_dependency 'sidekiq', '~> 4.1', '>= 4.1.4', '< 5'
-  s.add_dependency 'redis', '~> 3.3', '>= 3.3.1'
+  s.add_dependency 'redis', '~> 3.3', '>= 3.3.0'
 
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rack-test', '~> 0.6'
