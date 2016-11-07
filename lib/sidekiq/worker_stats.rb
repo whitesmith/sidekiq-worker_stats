@@ -15,7 +15,7 @@ module Sidekiq
         @configuration ||= Configuration.new
       end
 
-      def initialize
+      def configure
         yield(configuration)
       end
     end

@@ -17,7 +17,7 @@ module Sidekiq
 
         thr = Thread.new do
           while true do
-            sleep 1
+            sleep Sidekiq::WorkerStats.configuration.time
             worker_stats[:mem][Time.now.to_i] = `awk '{ print $2 }' /proc/#{worker_stats[:pid]}/statm`.strip.to_i * worker_stats[:page_size]
           end
         end
@@ -39,6 +39,7 @@ module Sidekiq
         thr.exit if thr != nil
 
         worker_key = "#{worker_stats[:class]}:#{worker_stats[:start]}:#{worker_stats[:jid]}"
+
         save_worker_stats worker_key, worker_stats
       end
 
