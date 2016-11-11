@@ -19,7 +19,7 @@
               <td><a href="<%= root_path %>worker_stats/<%= key.to_s %>"><%= worker["class"].to_s %></a></td>
               <td><%= Time.at(worker["start"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
               <td><%= Time.at(worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
-              <td><%= "#{worker["runtime"]} s" %></td>
+              <td><%= "#{worker["walltime"]} s" %></td>
               <td><%= "#{(worker["mem"].values.inject(:+) / worker["mem"].count) / 1024 / 1024} Mb" %></td>
               <td><%= "#{(worker["mem"].values.max / 1024 / 1024)} Mb" %></td>
             </tr>

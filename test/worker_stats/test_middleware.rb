@@ -6,21 +6,41 @@ require 'sidekiq'
 require 'sidekiq/testing'
 require 'sidekiq/worker_stats'
 
-
-class WorkerHelper
+class BasicWorker
   include Sidekiq::Worker
+
+  sidekiq_options({
+    worker_stats_enabled: true,
+    worker_stats_mem_sleep: 1
+  })
 
   def perform
     # Let's use some memory
     a = []
-    for i in 1..10000000
+    for i in 1..5000000
       a << i.to_s * 10
     end
   end
 end
 
-class ErrorWorkerHelper
+class NoStatsWorker
   include Sidekiq::Worker
+
+  sidekiq_options({
+    worker_stats_enabled: false
+  })
+
+  def perform
+  end
+end
+
+class ErrorWorker
+  include Sidekiq::Worker
+
+  sidekiq_options({
+    worker_stats_enabled: true,
+    worker_stats_mem_sleep: 1
+  })
 
   def perform
     raise StandardError.new("Error")
@@ -28,33 +48,34 @@ class ErrorWorkerHelper
 end
 
 class TestMiddleware < Minitest::Test
-  include Rack::Test::Methods
-
-  def app
-    Sidekiq::Web
-  end
-
   def setup
     Sidekiq::Testing.server_middleware do |chain|
       chain.add Sidekiq::WorkerStats::Middleware
     end
   end
 
-  def test_that_middleware_reports_start
+  def test_basic_worker_stats_are_saved
     Sidekiq::Testing.inline! do
-      WorkerHelper.perform_async
+      BasicWorker.perform_async
     end
   end
 
-  def test_that_middleware_reports_end
-    skip 'todo'
+  def test_no_stats_worker
+    Sidekiq::Testing.inline! do
+      NoStatsWorker.perform_async
+    end
   end
 
   def test_that_middleware_raises_error
     Sidekiq::Testing.inline! do
       assert_raises StandardError do
-        ErrorWorkerHelper.perform_async
+        ErrorWorker.perform_async
       end
     end
   end
+  
+  def test_that_middleware_reports_end
+    skip 'todo'
+  end
+
 end

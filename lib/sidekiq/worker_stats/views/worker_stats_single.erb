@@ -38,7 +38,7 @@
             </tr>
             <tr>
               <td>Runtime</td>
-              <td><%= @worker["runtime"] %> seconds</td>
+              <td><%= @worker["walltime"] %> seconds</td>
             </tr>
           </tbody>
         </table>
@@ -57,7 +57,7 @@
           <tbody>
             <% @worker["mem"].each do |time, mem| %>
               <tr>
-                <td><%= (time.to_i - @worker["start"]).to_s %> seconds</td>
+                <td><%= (time.to_f - @worker["start"]).round(2).to_s %> seconds</td>
                 <td><%= "#{mem / 1024 / 1024} Mb" %></td>
               </tr>
             <% end %>

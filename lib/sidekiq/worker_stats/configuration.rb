@@ -1,13 +1,23 @@
 module Sidekiq
   module WorkerStats
     class Configuration
-      attr_accessor :log_file
-      attr_accessor :time
+      DEFAULT_MEM_SLEEP = 5.freeze
+      DEFAULT_ENABLED = false.freeze
 
-      def initialize
-        @log_file = 'log/sidekiq.log'
-        @time = 5
+      attr_reader :klass
+
+      def initialize(klass)
+        @klass = klass
+      end
+
+      def mem_sleep
+        @klass.get_sidekiq_options['worker_stats_mem_sleep'] || Sidekiq::WorkerStats::Configuration::DEFAULT_MEM_SLEEP
+      end
+
+      def enabled
+        @klass.get_sidekiq_options['worker_stats_enabled'] || Sidekiq::WorkerStats::Configuration::DEFAULT_ENABLED
       end
     end
   end
 end
+

@@ -13,7 +13,8 @@ module Sidekiq
           Sidekiq.redis do |redis|
             keys = redis.hkeys REDIS_HASH
             keys.each do |key|
-              @workers[key] = JSON.parse(redis.hget(REDIS_HASH, key))
+              worker_stats = redis.hget(REDIS_HASH, key)
+              @workers[key] = JSON.parse(worker_stats) if worker_stats != nil
             end
           end
 
@@ -34,5 +35,7 @@ module Sidekiq
   end
 end
 
-Sidekiq::Web.register Sidekiq::WorkerStats::Web
-Sidekiq::Web.tabs['Worker Stats'] = 'worker_stats'
+if defined?(Sidekiq::Web)
+  Sidekiq::Web.register Sidekiq::WorkerStats::Web
+  Sidekiq::Web.tabs['Worker Stats'] = 'worker_stats'
+end
