@@ -12,8 +12,8 @@ module Sidekiq
           return
         end
 
+        s = Sidekiq::WorkerStats::Stats.new(worker, msg, queue, c)
         begin
-          s = Sidekiq::WorkerStats::Stats.new(worker, msg, queue, c)
           yield
           s.stop('completed')
         rescue => e

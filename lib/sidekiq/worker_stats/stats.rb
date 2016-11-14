@@ -23,7 +23,7 @@ module Sidekiq
         @config = config
         @queue = queue
         @klass = worker.class
-        @pid = Process.pid
+        @pid = ::Process.pid
         @jid = worker.jid
         @page_size = `getconf PAGESIZE`.to_i
         start
@@ -31,17 +31,17 @@ module Sidekiq
 
       def start
         @status = 'started'
-        @start = Time.now.to_f
+        @start = ::Time.now.to_f
         memory_measurement
       end
 
       def stop(status)
-        @stop = Time.now.to_f
+        @stop = ::Time.now.to_f
         @walltime = @stop - @start
         @status = status
 
         mem_thr.exit if mem_thr != nil
-        @mem[Time.now.to_f] = current_memory
+        @mem[::Time.now.to_f] = current_memory
       end
 
       def save
@@ -60,7 +60,7 @@ module Sidekiq
         }
 
         Sidekiq.redis do |redis|
-          redis.hset Sidekiq::WorkerStats::REDIS_HASH, worker_key, JSON.generate(data)
+          redis.hset ::Sidekiq::WorkerStats::REDIS_HASH, worker_key, JSON.generate(data)
         end
       end
 
@@ -70,9 +70,9 @@ module Sidekiq
         @mem = {}
         mem_sleep = @config.mem_sleep
         puts mem_sleep
-        @mem_thr = Thread.new do
+        @mem_thr = ::Thread.new do
           while true do
-            @mem[Time.now.to_f] = current_memory
+            @mem[::Time.now.to_f] = current_memory
             sleep mem_sleep
           end
         end
