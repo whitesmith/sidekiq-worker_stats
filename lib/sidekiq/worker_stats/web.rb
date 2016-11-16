@@ -9,14 +9,31 @@ module Sidekiq
         view_path = File.join(File.expand_path('..', __FILE__), 'views')
 
         app.get '/worker_stats' do
-          @workers = {}
+          @page = params["page"].to_i || 1
+          @page = @page >= 1 ? @page - 1 : 0
+
+          @per_page = params["per_page"].to_i || 10
+          @per_page = @per_page >= 1 ? @per_page : 10
+
+          @workers_stats = {}
+
           Sidekiq.redis do |redis|
             keys = redis.hkeys REDIS_HASH
             keys.each do |key|
               worker_stats = redis.hget(REDIS_HASH, key)
-              @workers[key] = JSON.parse(worker_stats) if worker_stats != nil
+              @workers_stats[key] = JSON.parse(worker_stats) if worker_stats != nil
             end
           end
+          @workers_stats = @workers_stats.sort_by { |k, v| ::Time.at(v["start"]) }.reverse
+          @stats_length = @workers_stats.length
+
+          @max_pages = @workers_stats.length / @per_page
+          @page = @page * @per_page < @workers_stats.length ? @page : @max_pages
+         
+          down_limit = @page * @per_page
+          up_limit   = ((@page + 1) * @per_page) - 1
+
+          @workers_stats = @workers_stats[down_limit..up_limit] || @workers_stats[0..@per_page-1]
 
           render(:erb, File.read(File.join(view_path, 'worker_stats.erb')))
         end

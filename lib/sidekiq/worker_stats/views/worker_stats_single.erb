@@ -17,6 +17,10 @@
               <td><%= @worker["class"] %></td>
             </tr>
             <tr>
+              <td>Args</td>
+              <td><%= @worker["args"] != nil ? @worker["args"].join(", ") : "--" %></td>
+            </tr>
+            <tr>
               <td>Queue</td>
               <td><%= @worker["queue"] %></td>
             </tr>

@@ -1,31 +1,53 @@
 <div class="worker_stats">
   <h2>Worker Stats</h2>
+  <h4>Showing results <%= "#{(@page * @per_page) + 1}" %> to <%= "#{[(@page + 1) * @per_page, @stats_length].min}" %> (Total: <%= "#{@stats_length}" %>)</h4>
+  <br>
+
+  <div style="height: 30px">
+    <% if @page > 0 %>
+      <div style="float: left;">
+        <a href="?page=<%= @page.to_s %>&per_page=<%= @per_page.to_s %>">Previous Page</a>
+      </div>
+    <% end %>
+
+    <% if @page < @max_pages %>
+      <div style="float: right;">
+        <a href="?page=<%= (@page + 2).to_s %>&per_page=<%= @per_page.to_s %>">Next Page</a>
+      </div>
+    <% end %>
+  </div>
 
   <div class="worker_stats__container">
     <div class="worker_stats__table">
-      <table class="table table-hover table-bordered table-striped table-white live-reload">
+      <table class="table table-hover table-bordered table-striped table-white">
         <thead>
           <th>Worker</th>
+          <th>Arguments</th>
           <th>Started at</th>
           <th>Finished at</th>
-          <th>Runtime</th>
+          <th>Runtime (s)</th>
+          <th>Start Memory</th>
           <th>Avg. Memory</th>
           <th>Peak Memory</th>
         </thead>
 
         <tbody>
-          <% @workers.each do |key, worker| %>
+          <% @workers_stats.each do |key, worker| %>
             <tr>
               <td><a href="<%= root_path %>worker_stats/<%= key.to_s %>"><%= worker["class"].to_s %></a></td>
+              <td><%= worker["args"] != nil ? worker["args"].join(", ") : "--" %></td>
               <td><%= Time.at(worker["start"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
               <td><%= Time.at(worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
-              <td><%= "#{worker["walltime"]} s" %></td>
+              <td><%= "#{worker["walltime"].round(4)}" %></td>
+              <td><%= "#{worker["mem"][worker["mem"].keys.min] / 1024 / 1024} Mb" %></td>
               <td><%= "#{(worker["mem"].values.inject(:+) / worker["mem"].count) / 1024 / 1024} Mb" %></td>
               <td><%= "#{(worker["mem"].values.max / 1024 / 1024)} Mb" %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
+
+
     </div>
   </div>
 </div>

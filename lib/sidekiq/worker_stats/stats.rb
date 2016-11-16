@@ -8,6 +8,7 @@ module Sidekiq
       attr_reader :jid
       attr_reader :queue
       attr_reader :klass
+      attr_reader :args
 
       attr_reader :start
       attr_reader :stop
@@ -25,6 +26,7 @@ module Sidekiq
         @klass = worker.class
         @pid = ::Process.pid
         @jid = worker.jid
+        @args = msg["args"]
         @page_size = `getconf PAGESIZE`.to_i
         start
       end
@@ -51,6 +53,7 @@ module Sidekiq
           jid: @jid,
           queue: @queue,
           class: @klass,
+          args: @args,
           start: @start,
           stop: @stop,
           walltime: @walltime,
@@ -69,7 +72,6 @@ module Sidekiq
       def memory_measurement
         @mem = {}
         mem_sleep = @config.mem_sleep
-        puts mem_sleep
         @mem_thr = ::Thread.new do
           while true do
             @mem[::Time.now.to_f] = current_memory

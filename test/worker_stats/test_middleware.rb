@@ -14,7 +14,7 @@ class BasicWorker
     worker_stats_mem_sleep: 1
   })
 
-  def perform
+  def perform(arg1)
     # Let's use some memory
     a = []
     for i in 1..5000000
@@ -56,7 +56,7 @@ class TestMiddleware < Minitest::Test
 
   def test_basic_worker_stats_are_saved
     Sidekiq::Testing.inline! do
-      BasicWorker.perform_async
+      BasicWorker.perform_async("teste")
     end
   end
 
