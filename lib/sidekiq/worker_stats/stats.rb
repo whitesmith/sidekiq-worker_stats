@@ -10,8 +10,8 @@ module Sidekiq
       attr_reader :klass
       attr_reader :args
 
-      attr_reader :start
-      attr_reader :stop
+      attr_reader :start_t
+      attr_reader :stop_t
       attr_reader :walltime
       attr_reader :status
       attr_reader :page_size
@@ -33,13 +33,13 @@ module Sidekiq
 
       def start
         @status = 'started'
-        @start = ::Time.now.to_f
+        @start_t = ::Time.now.to_f
         memory_measurement
       end
 
       def stop(status)
-        @stop = ::Time.now.to_f
-        @walltime = @stop - @start
+        @stop_t = ::Time.now.to_f
+        @walltime = @stop_t - @start_t
         @status = status
 
         mem_thr.exit if mem_thr != nil
@@ -47,15 +47,15 @@ module Sidekiq
       end
 
       def save
-        worker_key = "#{@klass}:#{@start}:#{@jid}"
+        worker_key = "#{@klass}:#{@start_t}:#{@jid}"
         data = {
           pid: @pid,
           jid: @jid,
           queue: @queue,
           class: @klass,
           args: @args,
-          start: @start,
-          stop: @stop,
+          start: @start_t,
+          stop: @stop_t,
           walltime: @walltime,
           status: @status,
           page_size: @page_size,

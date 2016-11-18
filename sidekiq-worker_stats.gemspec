@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.version       = Sidekiq::WorkerStats::VERSION
   s.license       = 'MIT'
   s.summary       = 'System statistics for your sidekiq workers'
-  s.description   = 'Save and see on the sidekiq dashboard your workers statistics'
-  
+  s.description   = 'Save and analyze your workers statistics'
+
   s.authors       = ['Alexandre Jesus']
   s.email         = ['adbjesus@gmail.com']
   s.homepage      = 'https://github.com/whitesmith/sidekiq-worker_stats'
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ['lib']
-  
+
   s.add_dependency 'sidekiq', '~> 4.1', '>= 4.1.4', '< 5'
   s.add_dependency 'redis', '~> 3.3', '>= 3.3.0'
 

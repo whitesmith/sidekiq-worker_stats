@@ -1,7 +1,5 @@
 require 'minitest/autorun'
 
-require 'rack/test'
-
 require 'sidekiq'
 require 'sidekiq/testing'
 require 'sidekiq/worker_stats'
