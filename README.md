@@ -1,7 +1,7 @@
 # sidekiq-worker\_stats
 **Statistics for sidekiq workers**
 
-Build status - TODO
+[![CircleCI](https://circleci.com/gh/whitesmith/sidekiq-worker_stats.svg?style=svg)](https://circleci.com/gh/whitesmith/sidekiq-worker_stats)
 
 The following statistics are saved for analysis:
 

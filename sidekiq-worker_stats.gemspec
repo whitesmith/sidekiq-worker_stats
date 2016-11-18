@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rack-test', '~> 0.6'
   s.add_development_dependency 'byebug', '~> 3.5'
+  s.add_development_dependency 'rake', '~> 11.3'
 end
