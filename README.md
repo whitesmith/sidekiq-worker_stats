@@ -50,5 +50,5 @@ All configurations you can include on `sidekiq_options`
 |---------------|------|---------|-------------|
 | `worker_stats_enabled` | boolean | false | Whether `worker_stats` should be enabled for this worker or not |
 | `worker_stats_mem_sleep ` | number | 5 | How many seconds to wait between each memory measurement |
-
+| `worker_stats_max_samples ` | number | 1000 | How many samples to keep for a given worker, it will delete the oldest samples first |
 
