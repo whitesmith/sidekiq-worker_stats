@@ -3,6 +3,7 @@ module Sidekiq
     class Configuration
       DEFAULT_MEM_SLEEP = 5.freeze
       DEFAULT_ENABLED = false.freeze
+      DEFAULT_MAX_SAMPLES = 1000
 
       attr_reader :klass
 
@@ -17,7 +18,10 @@ module Sidekiq
       def enabled
         @klass.get_sidekiq_options['worker_stats_enabled'] || Sidekiq::WorkerStats::Configuration::DEFAULT_ENABLED
       end
+
+      def max_samples
+        @klass.get_sidekiq_options['worker_stats_max_samples'] || Sidekiq::WorkerStats::Configuration::DEFAULT_MAX_SAMPLES
+      end
     end
   end
 end
-
