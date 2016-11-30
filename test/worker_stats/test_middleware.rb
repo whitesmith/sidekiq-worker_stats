@@ -7,15 +7,15 @@ require 'sidekiq/worker_stats'
 class BasicWorker
   include Sidekiq::Worker
 
-  sidekiq_options({
+  sidekiq_options(
     worker_stats_enabled: true,
     worker_stats_mem_sleep: 1
-  })
+  )
 
-  def perform(arg1)
+  def perform(_arg1)
     # Let's use some memory
     a = []
-    for i in 1..5000000
+    (1..5_000_000).each do |i|
       a << i.to_s * 10
     end
   end
@@ -24,9 +24,9 @@ end
 class NoStatsWorker
   include Sidekiq::Worker
 
-  sidekiq_options({
+  sidekiq_options(
     worker_stats_enabled: false
-  })
+  )
 
   def perform
   end
@@ -35,13 +35,26 @@ end
 class ErrorWorker
   include Sidekiq::Worker
 
-  sidekiq_options({
+  sidekiq_options(
     worker_stats_enabled: true,
     worker_stats_mem_sleep: 1
-  })
+  )
 
   def perform
-    raise StandardError.new("Error")
+    raise StandardError.new('Error')
+  end
+end
+
+class Max2Worker
+  include Sidekiq::Worker
+
+  sidekiq_options(
+    worker_stats_enabled: true,
+    worker_stats_mem_sleep: 1,
+    worker_stats_max_samples: 2
+  )
+
+  def perform
   end
 end
 
@@ -54,7 +67,7 @@ class TestMiddleware < Minitest::Test
 
   def test_basic_worker_stats_are_saved
     Sidekiq::Testing.inline! do
-      BasicWorker.perform_async("teste")
+      BasicWorker.perform_async('teste')
     end
   end
 
@@ -71,9 +84,19 @@ class TestMiddleware < Minitest::Test
       end
     end
   end
-  
+
+  def test_max_samples
+    Sidekiq::Testing.inline! do
+      Max2Worker.perform_async
+      Max2Worker.perform_async
+      Max2Worker.perform_async
+      Max2Worker.perform_async
+    end
+
+    # Should only mantain record for 2 elements
+  end
+
   def test_that_middleware_reports_end
     skip 'todo'
   end
-
 end

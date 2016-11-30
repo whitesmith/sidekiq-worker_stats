@@ -65,6 +65,8 @@ module Sidekiq
         Sidekiq.redis do |redis|
           redis.hset ::Sidekiq::WorkerStats::REDIS_HASH, worker_key, JSON.generate(data)
         end
+
+        remove_old_samples
       end
 
       private
@@ -82,6 +84,29 @@ module Sidekiq
 
       def current_memory
         `awk '{ print $2 }' /proc/#{@pid}/statm`.strip.to_i * @page_size
+      end
+
+      # Remove old samples if number of samples > @config.max_samples
+      def remove_old_samples
+        keys = nil
+        Sidekiq.redis do |redis|
+          keys = redis.hkeys ::Sidekiq::WorkerStats::REDIS_HASH
+        end
+
+        return if keys.length <= @config.max_samples
+
+        keys = keys.map { |k| k.split(':') if k.start_with?(@klass.to_s) }.compact
+
+        return if keys.length <= @config.max_samples
+
+        keys.sort! { |x, y| x[1] <=> y[1] }
+        keys = keys.map { |k| k.join(':') }
+
+        Sidekiq.redis do |redis|
+          keys[0..keys.length - @config.max_samples - 1].each do |k|
+            redis.hdel ::Sidekiq::WorkerStats::REDIS_HASH, k
+          end
+        end
       end
     end
   end
