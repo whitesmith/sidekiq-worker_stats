@@ -54,15 +54,15 @@
       <div class="worker_stats__memory_table">
         <table class="table table-hover table-bordered table-striped table-white">
           <thead>
-            <th>Time (after start)</th>
-            <th>Memory</th>
+            <th>Time after start (s)</th>
+            <th>Memory (Mb)</th>
           </thead>
 
           <tbody>
             <% @worker["mem"].each do |time, mem| %>
               <tr>
-                <td><%= (time.to_f - @worker["start"]).round(2).to_s %> seconds</td>
-                <td><%= "#{mem / 1024 / 1024} Mb" %></td>
+                <td><%= (time.to_f - @worker["start"]).round(2).to_s %></td>
+                <td><%= "#{mem / 1024 / 1024}" %></td>
               </tr>
             <% end %>
           </tbody>
