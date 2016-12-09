@@ -26,9 +26,8 @@
           <th>Started at</th>
           <th>Finished at</th>
           <th>Runtime (s)</th>
-          <th>Start Memory</th>
-          <th>Avg. Memory</th>
-          <th>Peak Memory</th>
+          <th>Start Memory (Mb)</th>
+          <th>Peak Memory (Mb)</th>
         </thead>
 
         <tbody>
@@ -39,9 +38,8 @@
               <td><%= Time.at(worker["start"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
               <td><%= Time.at(worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
               <td><%= "#{worker["walltime"].round(4)}" %></td>
-              <td><%= "#{worker["mem"][worker["mem"].keys.min] / 1024 / 1024} Mb" %></td>
-              <td><%= "#{(worker["mem"].values.inject(:+) / worker["mem"].count) / 1024 / 1024} Mb" %></td>
-              <td><%= "#{(worker["mem"].values.max / 1024 / 1024)} Mb" %></td>
+              <td><%= "#{worker["mem"][worker["mem"].keys.min] / 1024 / 1024}" %></td>
+              <td><%= "#{(worker["mem"].values.max / 1024 / 1024)}" %></td>
             </tr>
           <% end %>
         </tbody>
