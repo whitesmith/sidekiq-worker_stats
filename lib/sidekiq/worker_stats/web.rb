@@ -27,7 +27,7 @@ module Sidekiq
           @workers_stats = @workers_stats.sort_by { |k, v| ::Time.at(v["start"]) }.reverse
           @stats_length = @workers_stats.length
 
-          @max_pages = @workers_stats.length / @per_page
+          @max_pages = (@stats_length / @per_page) - (@stats_length % @per_page == 0 ? 1 : 0)
           @page = @page * @per_page < @workers_stats.length ? @page : @max_pages
          
           down_limit = @page * @per_page
