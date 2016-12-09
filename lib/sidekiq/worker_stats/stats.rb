@@ -14,7 +14,6 @@ module Sidekiq
       attr_reader :stop_t
       attr_reader :walltime
       attr_reader :status
-      attr_reader :page_size
       attr_reader :mem
 
       attr_reader :mem_thr
@@ -27,7 +26,6 @@ module Sidekiq
         @pid = ::Process.pid
         @jid = worker.jid
         @args = msg["args"]
-        @page_size = `getconf PAGESIZE`.to_i
         start
       end
 
@@ -58,7 +56,6 @@ module Sidekiq
           stop: @stop_t,
           walltime: @walltime,
           status: @status,
-          page_size: @page_size,
           mem: @mem
         }
 
@@ -83,7 +80,7 @@ module Sidekiq
       end
 
       def current_memory
-        `awk '{ print $2 }' /proc/#{@pid}/statm`.strip.to_i * @page_size
+        `ps -o rss= -p #{@pid}`.strip.to_i * 1024
       end
 
       # Remove old samples if number of samples > @config.max_samples
