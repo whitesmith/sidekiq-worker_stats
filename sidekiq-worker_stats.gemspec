@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_dependency 'sidekiq', '~> 4.1', '>= 4.1.4', '< 6'
+  s.add_dependency 'sidekiq', '>= 4.1.4', '< 6'
   s.add_dependency 'redis', '~> 3.3', '>= 3.3.0'
 
   s.add_development_dependency 'minitest', '~> 5.0'
