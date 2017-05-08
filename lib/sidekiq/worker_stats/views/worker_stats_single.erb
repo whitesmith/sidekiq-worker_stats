@@ -34,11 +34,11 @@
             </tr>
             <tr>
               <td>Start</td>
-              <td><%= Time.at(@worker["start"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
+              <td><%= @worker["start"] != nil ? Time.at(@worker["start"]).strftime("%Y-%m-%d %H:%M:%S") : "--"  %></td>
             </tr>
             <tr>
               <td>Stop</td>
-              <td><%= Time.at(@worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" %></td>
+              <td><%= @worker["stop"] != nil ? Time.at(@worker["stop"]).strftime("%Y-%m-%d %H:%M:%S") : "--" %></td>
             </tr>
             <tr>
               <td>Runtime</td>
