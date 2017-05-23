@@ -35,8 +35,8 @@
             <tr>
               <td><a href="<%= root_path %>worker_stats/<%= key.to_s %>"><%= worker["class"].to_s %></a></td>
               <td><%= worker["args"] != nil ? worker["args"].join(", ") : "--" %></td>
-              <td><%= worker["start"] != nil ? Time.at(worker["start"]).strftime "%Y-%m-%d %H:%M:%S" : "--" %></td>
-              <td><%= worker["stop"] != nil ? Time.at(worker["stop"]).strftime "%Y-%m-%d %H:%M:%S" : "--" %></td>
+              <td><%= worker["start"] != nil ? Time.at(worker["start"]).strftime("%Y-%m-%d %H:%M:%S") : "--" %></td>
+              <td><%= worker["stop"] != nil ? Time.at(worker["stop"]).strftime("%Y-%m-%d %H:%M:%S") : "--" %></td>
               <td><%= "#{worker["walltime"].round(4)}" %></td>
               <td><%= "#{worker["mem"][worker["mem"].keys.min] / 1024 / 1024}" %></td>
               <td><%= "#{(worker["mem"].values.max / 1024 / 1024)}" %></td>
