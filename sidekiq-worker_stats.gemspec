@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'sidekiq/worker_stats/version'
@@ -19,11 +20,11 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ['lib']
 
+  s.add_dependency 'redis', '>= 3.3', '< 5'
   s.add_dependency 'sidekiq', '>= 4.1.4', '< 6'
-  s.add_dependency 'redis', '~> 3.3', '>= 3.3.0'
 
+  s.add_development_dependency 'byebug', '~> 3.5'
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rack-test', '~> 0.6'
-  s.add_development_dependency 'byebug', '~> 3.5'
   s.add_development_dependency 'rake', '~> 11.3'
 end
